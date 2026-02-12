@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2nd Nots | Premium Educational Notes</title>
+    <style>
+        /* --- 1. RESET & VARIABLES --- */
+        :root {
+            --primary: #4F46E5;
+            --primary-dark: #4338ca;
+            --secondary: #10B981;
+            --bg-body: #f3f4f6;
+            --bg-card: #ffffff;
+            --text-main: #111827;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --ad-bg: #e0e7ff;
+            --pdf-red: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- 2. HEADER & NAVIGATION --- */
+        header {
+            background-color: var(--bg-card);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            padding: 1rem 5%;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .search-bar {
+            flex: 1;
+            margin: 0 2rem;
+            max-width: 400px;
+            display: none;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            outline: none;
+            background-color: var(--bg-body);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-item {
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-item:hover { color: var(--primary); }
+        
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* --- 3. ADS & LAYOUT --- */
+        .ad-banner {
+            background-color: var(--ad-bg);
+            border: 2px dashed #c7d2fe;
+            color: var(--text-light);
+            text-align: center;
+            padding: 1.5rem;
+            margin: 1rem auto;
+            max-width: 1200px;
+            width: 90%;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5%;
+            flex: 1;
+            width: 100%;
+        }
+
+        /* --- 4. SECTIONS (PAGES) --- */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 5. HOMEPAGE COMPONENTS --- */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem 0;
+            border-left: 5px solid var(--primary);
+            padding-left: 1rem;
+        }
+
+        /* Grid Layouts for Subjects */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .subject-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .subject-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* --- NOTE CARDS (STYLE LIKE GOOGLE DRIVE/WHATSAPP) --- */
+        
+        .note-card, .note-card-scroll {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+
+        .note-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Banner Image Area */
+        .note-banner {
+            width: 100%;
+            height: 160px;
+            background-color: #e5e7eb;
+            position: relative;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .note-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+        }
+
+        .pdf-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--pdf-red);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .note-body { padding: 1rem; flex: 1; }
+        .note-title { font-size: 1.1rem; margin-bottom: 0.3rem; font-weight: 600; color: #1f2937; }
+        .note-desc { color: var(--text-light); font-size: 0.85rem; line-height: 1.4; }
+        
+        .note-footer {
+            padding: 0.8rem 1rem;
+            background: #f9fafb;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* --- SCROLLING WRAPPER --- */
+        .scrolling-wrapper {
+            overflow: hidden;
+            width: 100%;
+            position: relative;
+            padding: 10px 0;
+        }
+
+        .scrolling-content {
+            display: flex;
+            gap: 1.5rem;
+            animation: scrollNotes 20s linear infinite;
+            width: max-content;
+        }
+
+        @keyframes scrollNotes {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } 
+        }
+
+        .scrolling-wrapper:hover .scrolling-content {
+            animation-play-state: paused;
+        }
+
+        .note-card-scroll {
+            min-width: 280px; 
+            max-width: 280px;
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.2s;
+            text-align: center;
+        }
+        
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-secondary { background: var(--secondary); color: white; }
+        .btn:hover { opacity: 0.9; }
+
+        /* --- PDF VIEW PAGE --- */
+        .pdf-viewer-placeholder {
+            background: #e5e7eb;
+            height: 600px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #374151;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .file-info {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: #1f2937;
+            color: #d1d5db;
+            padding: 3rem 5%;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-col h3 { color: white; margin-bottom: 1rem; }
+        .footer-col a { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .footer-col a:hover { color: var(--primary); }
+
+        /* --- RESPONSIVENESS --- */
+        @media (min-width: 768px) {
+            .search-bar { display: block; }
+            .menu-toggle { display: none; }
+        }
+
+        @media (max-width: 767px) {
+            .nav-links { display: none; }
+            .menu-toggle { display: block; }
+            .hero h1 { font-size: 2rem; }
+            .pdf-viewer-placeholder { height: 400px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo" onclick="navigateTo('home')">2nd Nots</div>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="Search for notes, subjects...">
+            </div>
+
+            <nav class="nav-links">
+                <div class="nav-item" onclick="navigateTo('home')">Home</div>
+                <div class="nav-item">Subjects</div>
+                <div class="nav-item">About</div>
+                <div class="nav-item btn-primary" style="padding: 0.5rem 1rem; color: white; border-radius: 6px;">Login</div>
+            </nav>
+
+            <div class="menu-toggle">☰</div>
+        </div>
+    </header>
+
+    <div class="ad-banner">
+        [Ad Space: Top Banner 728x90] <br> Reserve this spot for Google Ads or Sponsors
+    </div>
+
+    <div class="container">
+        
+        <main id="page-home" class="page-section active">
+            <section class="hero">
+                <h1>Smart Notes for Smart Students</h1>
+                <p>Access high-quality, free educational notes for all subjects.</p>
+            </section>
+
+            <h2 class="section-title">Popular Subjects</h2>
+            <div class="grid-cards">
+                <div class="subject-card" onclick="openSubject('Biology')">
+                    <span class="subject-icon">🧬</span>
+                    <h3>Biology</h3>
+                    <p>Botany, Zoology, Genetics.</p>
+                </div>
+
+                <div class="subject-card" onclick="openSubject('Physics')">
+                    <span class="subject-icon">⚛️</span>
+                    <h3>Physics</h3>
+                    <p style="color: #ef4444; font-weight: bold;">Under construction</p>
+                </div>
+
+                <div class="subject-card" onclick="openSubject('Mathematics')">
+                    <span class="subject-icon">📐</span>
+                    <h3>Mathematics</h3>
+                    <p style="color: #ef4444; font-weight: bold;">Under construction</p>
+                </div>
+
+                <div class="subject-card" onclick="openSubject('Chemistry')">
+                    <span class="subject-icon">🧪</span>
+                    <h3>Chemistry</h3>
+                    <p style="color: #ef4444; font-weight: bold;">Under construction</p>
+                </div>
+            </div>
+
+            <h2 class="section-title">Latest Biology Notes (Auto Update)</h2>
+            <div class="scrolling-wrapper">
+                <div class="scrolling-content">
+                    
+                    <div class="note-card-scroll">
+                        <div class="note-banner">
+                            <img src="https://drive.google.com/thumbnail?id=1mwaugnXe4KB8VmyNQyK0b0kvAlSQZSEp&sz=w400" alt="Special Notes">
+                            <span class="pdf-badge">PDF</span>
+                        </div>
+                        <div class="note-body">
+                            <div class="note-title">Biology Special Notes</div>
+                            <p class="note-desc">New uploaded premium biology notes.</p>
+                        </div>
+                        <div class="note-footer">
+                            <button class="btn btn-primary" onclick="openPDF('Biology Special Notes', '1mwaugnXe4KB8VmyNQyK0b0kvAlSQZSEp')">View</button>
+                            <a href="https://drive.google.com/uc?export=download&id=1mwaugnXe4KB8VmyNQyK0b0kvAlSQZSEp" class="btn btn-secondary">Download</a>
+                        </div>
+                    </div>
+
+                    <div class="note-card-scroll">
+                        <div class="note-banner">
+                            <img src="https://drive.google.com/thumbnail?id=12ybNdPp6999d6VYH5RTHGPF6rVpqC3nG&sz=w400" alt="Cell Unit">
+                            <span class="pdf-badge">PDF</span>
+                        </div>
+                        <div class="note-body">
+                            <div class="note-title">Cell: The Unit of Life</div>
+                            <p class="note-desc">Complete notes on cell structures.</p>
+                        </div>
+                        <div class="note-footer">
+                            <button class="btn btn-primary" onclick="openPDF('Cell: The Unit of Life', '12ybNdPp6999d6VYH5RTHGPF6rVpqC3nG')">View</button>
+                            <a href="https://drive.google.com/uc?export=download&id=12ybNdPp6999d6VYH5RTHGPF6rVpqC3nG" class="btn btn-secondary">Download</a>
+                        </div>
+                    </div>
+
+                    <div class="note-card-scroll">
+                        <div class="note-banner">
+                            <img src="https://drive.google.com/thumbnail?id=1mh-f0xSaqDLqiLHJpeE9b4F1OLqVO5Dq&sz=w400" alt="Digestion">
+                            <span class="pdf-badge">PDF</span>
+                        </div>
+                        <div class="note-body">
+                            <div class="note-title">Digestion & Absorption</div>
+                            <p class="note-desc">Human physiology chapter notes.</p>
+                        </div>
+                        <div class="note-footer">
+                            <button class="btn btn-primary" onclick="openPDF('Digestion & Absorption', '1mh-f0xSaqDLqiLHJpeE9b4F1OLqVO5Dq')">View</button>
+                            <a href="https://drive.google.com/uc?export=download&id=1mh-f0xSaqDLqiLHJpeE9b4F1OLqVO5Dq" class="btn btn-secondary">Download</a>
+                        </div>
+                    </div>
+
+                    <div class="note-card-scroll">
+                        <div class="note-banner">
+                            <img src="https://drive.google.com/thumbnail?id=1ppPDTpE5AvCi4QVsVwhzzeqTylz4q4bI&sz=w400" alt="Plant Growth">
+                            <span class="pdf-badge">PDF</span>
+                        </div>
+                        <div class="note-body">
+                            <div class="note-title">Plant Growth</div>
+                            <p class="note-desc">Hormones and development phases.</p>
+                        </div>
+                        <div class="note-footer">
+                            <button class="btn btn-primary" onclick="openPDF('Plant Growth', '1ppPDTpE5AvCi4QVsVwhzzeqTylz4q4bI')">View</button>
+                            <a href="https://drive.google.com/uc?export=download&id=1ppPDTpE5AvCi4QVsVwhzzeqTylz4q4bI" class="btn btn-secondary">Download</a>
+                        </div>
+                    </div>
+
+                    <div class="note-card-scroll">
+                        <div class="note-banner">
+                            <img src="https://drive.google.com/thumbnail?id=1hhAWWXHw_eUyLRwEUjBmIESueLznlCIM&sz=w400" alt="Genetics">
+                            <span class="pdf-badge">PDF</span>
+                        </div>
+                        <div class="note-body">
+                            <div class="note-title">Molecular Inheritance</div>
+                            <p class="note-desc">DNA, RNA and Inheritance laws.</p>
+                        </div>
+                        <div class="note-footer">
+                            <button class="btn btn-primary" onclick="openPDF('Molecular Inheritance', '1hhAWWXHw_eUyLRwEUjBmIESueLznlCIM')">View</button>
+                            <a href="https://drive.google.com/uc?export=download&id=1hhAWWXHw_eUyLRwEUjBmIESueLznlCIM" class="btn btn-secondary">Download</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+
+        <main id="page-subject" class="page-section">
+            <button class="btn" onclick="navigateTo('home')" style="margin-bottom: 1rem; border:1px solid #ddd;">← Back to Home</button>
+            <h1 id="subject-header-title" style="margin-bottom: 1.5rem;">Biology</h1>
+            
+            <div class="grid-cards">
+                
+                <div class="note-card">
+                    <div class="note-banner">
+                        <img src="https://drive.google.com/thumbnail?id=1mwaugnXe4KB8VmyNQyK0b0kvAlSQZSEp&sz=w600" alt="Biology Special Notes">
+                        <span class="pdf-badge">PDF</span>
+                    </div>
+                    <div class="note-body">
+                        <div class="note-title">Biology Special Notes</div>
+                        <p class="note-desc">New uploaded premium biology notes.</p>
+                    </div>
+                    <div class="note-footer">
+                        <button class="btn btn-primary" onclick="openPDF('Biology Special Notes', '1mwaugnXe4KB8VmyNQyK0b0kvAlSQZSEp')">Read Now</button>
+                        <a href="https://drive.google.com/uc?export=download&id=1mwaugnXe4KB8VmyNQyK0b0kvAlSQZSEp" class="btn btn-secondary">Download</a>
+                    </div>
+                </div>
+
+                <div class="note-card">
+                    <div class="note-banner">
+                        <img src="https://drive.google.com/thumbnail?id=1mh-f0xSaqDLqiLHJpeE9b4F1OLqVO5Dq&sz=w600" alt="Digestion">
+                        <span class="pdf-badge">PDF</span>
+                    </div>
+                    <div class="note-body">
+                        <div class="note-title">Digestion and Absorption</div>
+                        <p class="note-desc">Human physiology, digestive system notes (Class 11).</p>
+                    </div>
+                    <div class="note-footer">
+                        <button class="btn btn-primary" onclick="openPDF('Digestion and Absorption', '1mh-f0xSaqDLqiLHJpeE9b4F1OLqVO5Dq')">Read Now</button>
+                        <a href="https://drive.google.com/uc?export=download&id=1mh-f0xSaqDLqiLHJpeE9b4F1OLqVO5Dq" class="btn btn-secondary">Download</a>
+                    </div>
+                </div>
+
+                <div class="note-card">
+                    <div class="note-banner">
+                        <img src="https://drive.google.com/thumbnail?id=1xg_Mw8sMccUvZK38-wqh5t5rKQFGm-Bx&sz=w600" alt="Cell Cycle">
+                        <span class="pdf-badge">PDF</span>
+                    </div>
+                    <div class="note-body">
+                        <div class="note-title">Cell Cycle and Division</div>
+                        <p class="note-desc">Mitosis, Meiosis and cell cycle phases revision.</p>
+                    </div>
+                    <div class="note-footer">
+                        <button class="btn btn-primary" onclick="openPDF('Cell Cycle and Division', '1xg_Mw8sMccUvZK38-wqh5t5rKQFGm-Bx')">Read Now</button>
+                        <a href="https://drive.google.com/uc?export=download&id=1xg_Mw8sMccUvZK38-wqh5t5rKQFGm-Bx" class="btn btn-secondary">Download</a>
+                    </div>
+                </div>
+
+                <div class="note-card">
+                    <div class="note-banner">
+                        <img src="https://drive.google.com/thumbnail?id=12ybNdPp6999d6VYH5RTHGPF6rVpqC3nG&sz=w600" alt="Cell Unit">
+                        <span class="pdf-badge">PDF</span>
+                    </div>
+                    <div class="note-body">
+                        <div class="note-title">Cell: The Unit of Life</div>
+                        <p class="note-desc">Prokaryotic vs Eukaryotic cells structure.</p>
+                    </div>
+                    <div class="note-footer">
+                        <button class="btn btn-primary" onclick="openPDF('Cell: The Unit of Life', '12ybNdPp6999d6VYH5RTHGPF6rVpqC3nG')">Read Now</button>
+                        <a href="https://drive.google.com/uc?export=download&id=12ybNdPp6999d6VYH5RTHGPF6rVpqC3nG" class="btn btn-secondary">Download</a>
+                    </div>
+                </div>
+
+                <div class="note-card">
+                    <div class="note-banner">
+                        <img src="https://drive.google.com/thumbnail?id=1hhAWWXHw_eUyLRwEUjBmIESueLznlCIM&sz=w600" alt="Molecular Inheritance">
+                        <span class="pdf-badge">PDF</span>
+                    </div>
+                    <div class="note-body">
+                        <div class="note-title">Molecular Inheritance</div>
+                        <p class="note-desc">DNA Structure, Replication and Transcription.</p>
+                    </div>
+                    <div class="note-footer">
+                        <button class="btn btn-primary" onclick="openPDF('Molecular Inheritance', '1hhAWWXHw_eUyLRwEUjBmIESueLznlCIM')">Read Now</button>
+                        <a href="https://drive.google.com/uc?export=download&id=1hhAWWXHw_eUyLRwEUjBmIESueLznlCIM" class="btn btn-secondary">Download</a>
+                    </div>
+                </div>
+
+                <div class="note-card">
+                    <div class="note-banner">
+                        <img src="https://drive.google.com/thumbnail?id=1ppPDTpE5AvCi4QVsVwhzzeqTylz4q4bI&sz=w600" alt="Plant Growth">
+                        <span class="pdf-badge">PDF</span>
+                    </div>
+                    <div class="note-body">
+                        <div class="note-title">Plant Growth</div>
+                        <p class="note-desc">Auxin, Gibberellin and other plant hormones.</p>
+                    </div>
+                    <div class="note-footer">
+                        <button class="btn btn-primary" onclick="openPDF('Plant Growth', '1ppPDTpE5AvCi4QVsVwhzzeqTylz4q4bI')">Read Now</button>
+                        <a href="https://drive.google.com/uc?export=download&id=1ppPDTpE5AvCi4QVsVwhzzeqTylz4q4bI" class="btn btn-secondary">Download</a>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <main id="page-view" class="page-section">
+            <button class="btn" onclick="navigateTo('subject')" style="margin-bottom: 1rem;">← Back to Biology</button>
+            
+            <div class="file-info">
+                <h1 id="pdf-title" style="margin-bottom: 0.5rem;">Note Title</h1>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem;">Premium Biology Notes</p>
+                <div style="display: flex; gap: 1rem;">
+                    <a id="direct-download-btn" href="#" class="btn btn-secondary" style="flex:1;">Download PDF</a>
+                    <button class="btn" style="flex:1; border: 1px solid var(--border);" onclick="alert('Bookmark saved!')">Bookmark</button>
+                </div>
+            </div>
+
+            <div class="pdf-viewer-placeholder" id="pdf-viewer">
+                <div>Loading Document...</div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <div class="ad-banner">
+        [Ad Space: Bottom Banner 728x90]
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>2nd Nots</h3>
+                <p>Your #1 source for educational resources and exam preparation.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <a href="#">Home</a>
+                <a href="#">Subjects</a>
+                <a href="#">Latest Uploads</a>
+            </div>
+            <div class="footer-col">
+                <h3>Support</h3>
+                <a href="#">Contact Us</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">DMCA</a>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 2rem; border-top: 1px solid #374151; padding-top: 1rem; font-size: 0.8rem;">
+            &copy; 2024 2nd Nots. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Simple Router Function
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            if(pageId === 'home') document.getElementById('page-home').classList.add('active');
+            else if(pageId === 'subject') document.getElementById('page-subject').classList.add('active');
+            else if(pageId === 'view') document.getElementById('page-view').classList.add('active');
+            
+            window.scrollTo(0, 0);
+        }
+
+        // Subject Router Logic
+        function openSubject(subjectName) {
+            if (subjectName === 'Biology') {
+                document.getElementById('subject-header-title').innerText = subjectName;
+                navigateTo('subject');
+            } else {
+                alert('🚧 ' + subjectName + ' abhi under construction hai! Sirf Biology available hai.');
+            }
+        }
+
+        // PDF Viewer Logic: Updates iframe and Title
+        function openPDF(noteTitle, fileId) {
+            document.getElementById('pdf-title').innerText = noteTitle;
+            
+            // Update download button link dynamically
+            document.getElementById('direct-download-btn').href = "https://drive.google.com/uc?export=download&id=" + fileId;
+            
+            // Load PDF in iframe using Google Drive Preview
+            const viewer = document.getElementById('pdf-viewer');
+            viewer.innerHTML = `<iframe src="https://drive.google.com/file/d/${fileId}/preview" width="100%" height="100%" allow="autoplay" style="border: none;"></iframe>`;
+            
+            navigateTo('view');
+        }
+
+        document.querySelector('.menu-toggle').addEventListener('click', () => {
+            alert("Mobile Menu Options...");
+        });
+    </script>
+
+</body>
+</html>
+
