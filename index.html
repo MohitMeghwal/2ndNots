@@ -396,6 +396,12 @@
                     <p>Botany, Zoology, Genetics.</p>
                 </div>
 
+                <div class="subject-card" onclick="openSubject('World GK')">
+    <span class="subject-icon">🌍</span>
+    <h3>World GK</h3>
+    <p>Geography, History, and Global Current Affairs.</p>
+</div>
+
                 <div class="subject-card" onclick="openSubject('Physics')">
                     <span class="subject-icon">⚛️</span>
                     <h3>Physics</h3>
@@ -661,6 +667,28 @@
             </div>
         </main>
 
+        <main id="page-worldgk" class="page-section">
+    <button class="btn" onclick="navigateTo('home')" style="margin-bottom: 1rem; border:1px solid #ddd;">← Back to Home</button>
+    <h1 style="margin-bottom: 1.5rem;">World GK</h1>
+    
+    <div class="grid-cards" id="worldgk-notes-container">
+        <div class="note-card">
+            <div class="note-banner">
+                <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="World Map">
+                <span class="pdf-badge">PDF</span>
+            </div>
+            <div class="note-body">
+                <div class="note-title">World Geography Notes</div>
+                <p class="note-desc">Continents, Oceans, and Country details.</p>
+            </div>
+            <div class="note-footer">
+                <button class="btn btn-primary" onclick="alert('Isme aapko link add karna hoga!')">Read Now</button>
+                <button class="btn btn-secondary">Download</button>
+            </div>
+        </div>
+    </div>
+</main>
+
         <main id="page-view" class="page-section">
             <button class="btn" onclick="navigateTo('subject')" style="margin-bottom: 1rem;">← Back to Biology</button>
             
@@ -708,46 +736,42 @@
     </footer>
 
     <script>
-        // Simple Router Function
-        function navigateTo(pageId) {
-            document.querySelectorAll('.page-section').forEach(section => {
-                section.classList.remove('active');
-            });
+        // NAYA SCRIPT
+function navigateTo(pageId) {
+    // Sabhi pages ko chupao
+    document.querySelectorAll('.page-section').forEach(section => {
+        section.classList.remove('active');
+    });
 
-            if(pageId === 'home') document.getElementById('page-home').classList.add('active');
-            else if(pageId === 'subject') document.getElementById('page-subject').classList.add('active');
-            else if(pageId === 'view') document.getElementById('page-view').classList.add('active');
-            
-            window.scrollTo(0, 0);
-        }
+    // Jo page manga hai usko dikhao
+    if(pageId === 'home') document.getElementById('page-home').classList.add('active');
+    else if(pageId === 'subject') document.getElementById('page-subject').classList.add('active'); // Biology
+    else if(pageId === 'worldgk') document.getElementById('page-worldgk').classList.add('active'); // NAYA WORLD GK PAGE
+    else if(pageId === 'view') document.getElementById('page-view').classList.add('active');
+    
+    window.scrollTo(0, 0);
+}
 
-        // Subject Router Logic
-        function openSubject(subjectName) {
-            if (subjectName === 'Biology') {
-                document.getElementById('subject-header-title').innerText = subjectName;
-                navigateTo('subject');
-            } else {
-                alert('🚧 ' + subjectName + ' abhi under construction hai! Sirf Biology available hai.');
-            }
-        }
+function openSubject(subjectName) {
+    if (subjectName === 'Biology') {
+        document.getElementById('subject-header-title').innerText = subjectName;
+        navigateTo('subject');
+    } else if (subjectName === 'World GK') {
+        navigateTo('worldgk'); // GK card click karne par GK page khulega
+    } else {
+        alert('🚧 ' + subjectName + ' abhi under construction hai! Biology aur World GK try karein.');
+    }
+}
 
-        // PDF Viewer Logic: Updates iframe and Title
-        function openPDF(noteTitle, fileId) {
-            document.getElementById('pdf-title').innerText = noteTitle;
-            
-            // Update download button link dynamically
-            document.getElementById('direct-download-btn').href = "https://drive.google.com/uc?export=download&id=" + fileId;
-            
-            // Load PDF in iframe using Google Drive Preview
-            const viewer = document.getElementById('pdf-viewer');
-            viewer.innerHTML = `<iframe src="https://drive.google.com/file/d/${fileId}/preview" width="100%" height="100%" allow="autoplay" style="border: none;"></iframe>`;
-            
-            navigateTo('view');
-        }
-
-        document.querySelector('.menu-toggle').addEventListener('click', () => {
-            alert("Mobile Menu Options...");
-        });
+function openPDF(noteTitle, fileId) {
+    document.getElementById('pdf-title').innerText = noteTitle;
+    document.getElementById('direct-download-btn').href = "https://drive.google.com/uc?export=download&id=" + fileId;
+    
+    const viewer = document.getElementById('pdf-viewer');
+    viewer.innerHTML = `<iframe src="https://drive.google.com/file/d/${fileId}/preview" width="100%" height="100%" allow="autoplay" style="border: none;"></iframe>`;
+    
+    navigateTo('view');
+}
     </script>
 
 </body>
